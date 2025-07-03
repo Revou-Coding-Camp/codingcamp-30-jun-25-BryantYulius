@@ -1,4 +1,3 @@
-// FUNCTION UNTUK HALAMAN INDEX.HTML
 document.addEventListener("DOMContentLoaded", function () {
   const currentTimeElement = document.getElementById("currentTime");
   if (currentTimeElement) {
@@ -6,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const form = document.getElementById("contactForm");
+
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -15,68 +15,45 @@ document.addEventListener("DOMContentLoaded", function () {
       const pesan = document.getElementById("pesan").value;
       const gender = document.querySelector('input[name="gender"]:checked').value;
 
-      // Simpan nama ke localStorage
       localStorage.setItem("namaUser", nama);
+      localStorage.setItem("outputTanggal", tanggal);
       localStorage.setItem("outputGender", gender);
       localStorage.setItem("outputPesan", pesan);
-      localStorage.setItem("outputTanggal", tanggal); 
 
-      // Ganti welcome title di halaman index jika ada
+      updateOutput(nama, tanggal, gender, pesan);
+
       const welcomeTitle = document.getElementById("welcomeTitle");
       if (welcomeTitle) {
         welcomeTitle.textContent = `Hi ${nama}, Welcome To Website`;
       }
-
-      // Update info box
-      const outputNama = document.getElementById("outputNama");
-      const outputTanggal = document.getElementById("outputTanggal");
-      const outputGender = document.getElementById("outputGender");
-      const outputPesan = document.getElementById("outputPesan");
-
-      if (outputNama) outputNama.textContent = nama;
-      if (outputTanggal) outputTanggal.textContent = tanggal;
-      if (outputGender) outputGender.textContent = gender;
-      if (outputPesan) outputPesan.textContent = pesan;
-
-      if (currentTimeElement) {
-        currentTimeElement.textContent = new Date().toLocaleString();
-      }
     });
   }
 
-  // untuk simpen data agar tidak ke reset saat pindah halaman 
- const savedName = localStorage.getItem("namaUser");
-  const savedoutputGender = localStorage.getItem("outputGender");
-  const savedoutputPesan = localStorage.getItem("outputPesan");
-  const savedoutputTanggal = localStorage.getItem("outputTanggal");
+  const savedName = localStorage.getItem("namaUser");
+  const savedTanggal = localStorage.getItem("outputTanggal");
+  const savedGender = localStorage.getItem("outputGender");
+  const savedPesan = localStorage.getItem("outputPesan");
 
-  // Ganti welcome title kalau ada
+  updateOutput(savedName, savedTanggal, savedGender, savedPesan);
+
   const welcomeTitle = document.getElementById("welcomeTitle");
   if (savedName && welcomeTitle) {
     welcomeTitle.textContent = `Hi ${savedName}, Welcome To Website`;
   }
-
-  // Tampilkan data di info box
-  const outputNama = document.getElementById("outputNama");
-  if (savedName && outputNama) {
-    outputNama.textContent = savedName;
-  }
-
-  const outputGender = document.getElementById("outputGender");
-  if (savedoutputGender && outputGender) {
-    outputGender.textContent = savedoutputGender;
-  }
-
-  const outputPesan = document.getElementById("outputPesan");
-  if (savedoutputPesan && outputPesan) {
-    outputPesan.textContent = savedoutputPesan;
-  }
-
-  const outputTanggal = document.getElementById("outputTanggal");
-  if (savedoutputTanggal && outputTanggal) {
-    outputTanggal.textContent = savedoutputTanggal;
-  }
-
 });
 
-
+// Fungsi update info box
+function updateOutput(nama, tanggal, gender, pesan) {
+  if (nama && document.getElementById("outputNama")) {
+    document.getElementById("outputNama").textContent = nama;
+  }
+  if (tanggal && document.getElementById("outputTanggal")) {
+    document.getElementById("outputTanggal").textContent = tanggal;
+  }
+  if (gender && document.getElementById("outputGender")) {
+    document.getElementById("outputGender").textContent = gender;
+  }
+  if (pesan && document.getElementById("outputPesan")) {
+    document.getElementById("outputPesan").textContent = pesan;
+  }
+}
