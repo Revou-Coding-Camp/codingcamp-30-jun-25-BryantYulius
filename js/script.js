@@ -10,16 +10,26 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const nama = document.getElementById("nama").value;
+      const nama = document.getElementById("nama").value.trim();
       const tanggal = document.getElementById("tanggal").value;
-      const pesan = document.getElementById("pesan").value;
+      const pesan = document.getElementById("pesan").value.trim();
       const gender = document.querySelector('input[name="gender"]:checked').value;
 
-      localStorage.setItem("namaUser", nama);
-      localStorage.setItem("outputTanggal", tanggal);
-      localStorage.setItem("outputGender", gender);
-      localStorage.setItem("outputPesan", pesan);
+      // Validasi nama hanya huruf
+      const nameRegex = /^[A-Za-z\s]+$/;
+      if (!nameRegex.test(nama)) {
+        alert("Nama hanya boleh mengandung huruf dan spasi.");
+        return;
+      }
 
+      // Cegah SQL Injection sederhana pada pesan
+      const sqlKeywords = /(SELECT|INSERT|DELETE|UPDATE|DROP|--|;)/i;
+      if (sqlKeywords.test(pesan)) {
+        alert("Pesan tidak boleh mengandung perintah SQL.");
+        return;
+      }
+
+      // Update tampilan
       updateOutput(nama, tanggal, gender, pesan);
 
       const welcomeTitle = document.getElementById("welcomeTitle");
@@ -28,21 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-
-  const savedName = localStorage.getItem("namaUser");
-  const savedTanggal = localStorage.getItem("outputTanggal");
-  const savedGender = localStorage.getItem("outputGender");
-  const savedPesan = localStorage.getItem("outputPesan");
-
-  updateOutput(savedName, savedTanggal, savedGender, savedPesan);
-
-  const welcomeTitle = document.getElementById("welcomeTitle");
-  if (savedName && welcomeTitle) {
-    welcomeTitle.textContent = `Hi ${savedName}, Welcome To Website`;
-  }
 });
 
-// Fungsi update info box
 function updateOutput(nama, tanggal, gender, pesan) {
   if (nama && document.getElementById("outputNama")) {
     document.getElementById("outputNama").textContent = nama;
